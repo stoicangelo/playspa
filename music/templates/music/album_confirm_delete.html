@@ -1,0 +1,17 @@
+{% extends 'music/base.html' %}
+{% block title %}Playspa{% endblock %}
+{% block body %}
+  <form method="post" id="confirm">
+    {% csrf_token %}
+    <div style="background-color:white;margin:50px 600px 0px 200px;padding: 10px 0px 20px 120px">
+      <label align="center" style="font-size:20px">are you sure you want to delete the album</label></br>
+      <a href="{% url 'music:index' %}" >
+        <button type="button" value="No, go back" class="btn btn-warning">No, go back</button>
+      </a> &nbsp &nbsp
+      <button type="submit" value="confirm" class="btn btn-success">Confirm</button>
+    </div>
+  </form>
+  <script>
+
+  </script>
+{% endblock %}

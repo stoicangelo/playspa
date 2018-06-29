@@ -1,0 +1,96 @@
+{% extends 'music/base.html' %}
+{% load staticfiles %}
+
+{% block title %}Playspa{% endblock %}
+
+{% block heads %}
+  <link rel="stylesheet" type="text/css" href="{% static 'music/style_ind.css' %}" />
+{% endblock %}
+
+{% block body %}
+
+  <div class="container-fluid" style="margin-left:50px">
+    <h2> {{ user.username }}'s Albums </h2>
+    <h5> {{ user.username }} has {{ num }} albums </h5>
+  </div>
+
+
+  <div class="playground container-fluid rounded" >
+    <div class="row">
+
+      {% if object_list %}
+        {% for album in object_list %}  #<!-- we use object_list here without actual requirement-->
+
+          <div class="col-sm-4 col-md-3 col-lg-3 each-album" style="background-color:#515356; border-radius:10px">
+
+            <div class="image-container" style="margin-top:40px;">
+              <a href="{% url 'music:detail' album.id %}">
+                <img src="{{ album.album_logo.url }}" class="img-responsive img-thumbnail"/>
+              </a>
+            </div>
+
+            <div class="caption">
+
+              <h3 style="color:white;"> {{ album.album_title }} </h3>
+              <h4 style="color:white;"> {{ album.artist}} </h4>
+
+              <a href="{% url 'music:detail' album.id %}" role="button" class="btn btn-primary btn-md">view</a>
+              <a href="{% url 'music:album-delete' album.id %}">
+                <button type="button">
+                  <span class="glyphicon glyphicon-trash" style="color:red;"></span>
+                </button>
+              </a>
+
+            </div>
+
+          </div>
+          {% cycle '' '' '' '<div class="clearfix visible-lg"></div>' %}
+        {% endfor %}
+      {% endif %}
+
+    </div>
+  </div>
+
+  <!--
+    <form id="form_uord" method="post" >
+      <ol>
+        {% for album in object_list %} <!-- object_list is the default
+          where the data returned by the view is stored in the html script -->
+      <!--
+        <li>
+          <a href="{% url 'music:detail' album.id %}">{{ album.album_title}}</a>
+          &nbsp &nbsp &nbsp &nbsp
+          <a href="{% url 'music:album-update' album.id %}" >
+            <button id="update_button" type="button" value="update" class="btn btn-primary"> update</button>
+          </a>
+          &nbsp &nbsp
+          <a href="{% url 'music:album-delete' album.id %}" >
+            <button id="delete_button" type="button" value="delete" class="btn btn-danger" > delete </button>
+          </a>
+          </br></br>
+        </li>
+        {% endfor %}
+      </ol>
+    </form>
+
+    <script>
+
+      function upd(url_upd)
+      {
+        var f= document.getElementById("form_uord");
+        f.action=url_upd;
+        var but=document.getElementById("update_button");
+        but.type="submit";
+        document.getElementById("form_uord").submit();
+      }
+      function del(url_del)
+      {
+        var f= document.getElementById("form_uord");
+        f.action=url_del;
+        var but=document.getElementById("delete_button");
+        but.type="submit";
+        document.getElementById("form_uord").submit();
+      }
+    </script>
+  -->
+{% endblock %}

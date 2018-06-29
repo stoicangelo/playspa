@@ -1,0 +1,10 @@
+body{
+  background: white url("images/white_linen_background.jpg");
+}
+.navbar{
+  border-radius: 8px;
+}
+.navbar-brand{
+  font-family: 'Satisfy',cursive;
+  font-size: 30px;
+}

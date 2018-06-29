@@ -1,0 +1,21 @@
+{% extends 'music/base.html' %}
+{% block title %}Details{% endblock %}
+{% block body %}
+  <h3>
+    Now showing all details of album with ID {{album.id}}
+  </h3>
+
+  <img src='{{album.album_logo.url}}' style="width:400px" alt="shit, cant load img">
+
+  <h3> {{album.artist}} </h3>
+
+    {% for song in album.song_set.all %}
+
+        {{song.song_title}}
+        {% if song.is_favorite %}
+          <img src="http://i.imgur.com/b9b13Rd.png/" />
+        {% endif %}
+      <br>
+    {% endfor %}
+
+{% endblock %}
