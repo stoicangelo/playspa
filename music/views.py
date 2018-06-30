@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse_lazy
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from .forms import UserForm
 
@@ -22,24 +23,46 @@ def index(request):
             return render(request, 'music/index.html', context) #we are using onject_list here coz for learning classbasedgen views we did the rest accordingly
 
 
-class DetailView(generic.DetailView):
+class DetailView(LoginRequiredMixin, generic.DetailView):
+    login_url= 'music:login'
+    redirect_field_name= 'go_to'
     model= Album
     template_name= 'music/detail.html'
 
 
-class AlbumCreate(CreateView):
+class AlbumCreate(LoginRequiredMixin, CreateView):
+    login_url= 'music:login'
+    redirect_field_name='go_to'
     model=Album
     fields=['artist','album_title','genre','album_logo']
 
-class AlbumUpdate(UpdateView):
+    def form_valid(self, form):
+        temp= form.save(commit=False)
+        temp.user= self.request.user
+        temp.save()
+        return super(AlbumCreate, self).form_valid(form)
+
+
+class AlbumUpdate(LoginRequiredMixin, UpdateView):
+    login_url= 'music:login'
+    redirect_field_name='go_to'
     model=Album
     fields=['artist','album_title','genre','album_logo']
 
-class AlbumDelete(DeleteView):
+    def form_valid(self, form):
+        temp=form.save(commit=False)
+        temp.user= self.request.user
+        temp.save()
+        return super(AlbumUpdate, self).form_valid(form)
+
+
+class AlbumDelete(LoginRequiredMixin, DeleteView):
+    login_url= 'music:login'
+    redirect_field_name= 'go_to'
     model=Album
     #success_url= reverse_lazy('music:index')
     def get_success_url(self):
-        return reverse('music:index')
+        return reverse_lazy('music:index')
 
 class UserFormView(View):
     form_class= UserForm
