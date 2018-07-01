@@ -9,48 +9,50 @@
 
 {% block body %}
 
-  <div class="container-fluid" style="margin-left:50px">
-    <h2> {{ user.username }}'s Albums </h2>
-    <h5> {{ user.username }} has {{ num }} albums </h5>
-  </div>
+  <div class="parentmost-container">
+
+    <div class="heading-container">
+      <h2 style="color:white"> {{ user.username }}'s Albums </h2>
+    </div>
+    <h5 style="margin-top:25px"> {{ user.username }} has {{ num }} albums </h5>
 
 
-  <div class="playground container-fluid rounded" >
-    <div class="row">
+    <div class="playground container-fluid rounded" >
+      <div class="row">
 
-      {% if object_list %}
-        {% for album in object_list %}  #<!-- we use object_list here without actual requirement-->
+        {% if object_list %}
+          {% for album in object_list %}  <!-- we use object_list here without actual requirement-->
 
-          <div class="col-sm-4 col-md-3 col-lg-3 each-album" style="background-color:#515356; border-radius:10px">
+            <div class="col-sm-4 col-md-3 col-lg-3 each-album" style="background-color:#515356; border-radius:10px">
 
-            <div class="image-container" style="margin-top:40px;">
-              <a href="{% url 'music:detail' album.id %}">
-                <img src="{{ album.album_logo.url }}" class="img-responsive img-thumbnail"/>
-              </a>
+              <div class="image-container" style="margin-top:40px;">
+                <a href="{% url 'music:detail' album.id %}">
+                  <img src="{{ album.album_logo.url }}" class="img-responsive img-thumbnail"/>
+                </a>
+              </div>
+
+              <div class="caption">
+
+                <h3 style="color:white;"> {{ album.album_title }} </h3>
+                <h4 style="color:white;"> {{ album.artist}} </h4>
+
+                <a href="{% url 'music:detail' album.id %}" role="button" class="btn btn-primary btn-md">view</a>
+                <a href="{% url 'music:album-delete' album.id %}">
+                  <button type="button">
+                    <span class="glyphicon glyphicon-trash" style="color:red;"></span>
+                  </button>
+                </a>
+
+              </div>
+
             </div>
+            {% cycle '' '' '' '<div class="clearfix visible-lg"></div>' %}
+          {% endfor %}
+        {% endif %}
 
-            <div class="caption">
-
-              <h3 style="color:white;"> {{ album.album_title }} </h3>
-              <h4 style="color:white;"> {{ album.artist}} </h4>
-
-              <a href="{% url 'music:detail' album.id %}" role="button" class="btn btn-primary btn-md">view</a>
-              <a href="{% url 'music:album-delete' album.id %}">
-                <button type="button">
-                  <span class="glyphicon glyphicon-trash" style="color:red;"></span>
-                </button>
-              </a>
-
-            </div>
-
-          </div>
-          {% cycle '' '' '' '<div class="clearfix visible-lg"></div>' %}
-        {% endfor %}
-      {% endif %}
-
+      </div>
     </div>
   </div>
-
   <!--
     <form id="form_uord" method="post" >
       <ol>

@@ -1,9 +1,21 @@
-.playground {
-  background-color:#515356;
+.parentmost-container{
   margin-left: 70px;
   margin-right: 70px;
-  border-radius: 10px
+}
+.playground {
+  background-color:#515356;
+  margin-top: 50px;
+  border-radius: 10px;
+  padding-bottom: 15px;
 }
 .each-album{
   background-color: #dee1e5;
+}
+.heading-container{
+  width: 300px;
+  margin-top: 60px;
+  padding: 20px;
+  background-color: #515356;
+  border-radius: 10px;
+  box-shadow: 7px 7px 8px;
 }
