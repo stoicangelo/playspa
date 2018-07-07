@@ -1,6 +1,6 @@
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from .models import Album
+from .models import Album, Song
 from django.core.urlresolvers import reverse_lazy
 
 from django.shortcuts import render, redirect
@@ -30,6 +30,25 @@ class DetailView(LoginRequiredMixin, generic.DetailView):
     template_name= 'music/detail.html'
 
 
+class SongCreate(LoginRequiredMixin, CreateView):
+
+    login_url='music:login'
+    redirect_field_name='go_to'
+    model=Song
+    fields=['song_title','audio_file']
+
+    def get_context_data(self, *args, **kwargs):
+        kwargs['album']= Album.objects.get(pk= self.kwargs['pk'])
+        return super(SongCreate, self).get_context_data(*args, **kwargs)
+
+
+    def form_valid(self, form):
+        temp= form.save(commit=False)
+        temp.album= Album.objects.get(pk= self.kwargs['pk'])
+        temp.save()
+        return super(SongCreate, self).form_valid(form)
+
+
 class AlbumCreate(LoginRequiredMixin, CreateView):
     login_url= 'music:login'
     redirect_field_name='go_to'
@@ -41,6 +60,10 @@ class AlbumCreate(LoginRequiredMixin, CreateView):
         temp.user= self.request.user
         temp.save()
         return super(AlbumCreate, self).form_valid(form)
+
+
+
+
 
 
 class AlbumUpdate(LoginRequiredMixin, UpdateView):
@@ -122,3 +145,22 @@ def logout_user(request):
     else :
         logout(request)
         return redirect('/music/login/')
+
+def songs(request, filter_by):
+    if not request.user.is_authenticated():
+        return render(request, 'music/login.html')
+    else:
+        try:
+            song_ids = []
+            for album in Album.objects.filter(user=request.user):
+                for song in album.song_set.all():
+                    song_ids.append(song.pk)
+            users_songs = Song.objects.filter(pk__in=song_ids)
+            if filter_by == 'favorites':
+                users_songs = users_songs.filter(is_favorite=True)
+        except Album.DoesNotExist:
+            users_songs = []
+        return render(request, 'music/music_home.html', {
+            'song_list': users_songs,
+            'filter_by': filter_by,
+})

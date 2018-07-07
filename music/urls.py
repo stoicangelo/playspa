@@ -25,6 +25,11 @@ urlpatterns= [
     url(r'^login/$',views.LoginView.as_view(), name='login'),
 
     #/music/logout/
-    url(r'^logout/$',views.logout_user,name='logout')
+    url(r'^logout/$',views.logout_user,name='logout'),
 
+    #/music/songs/all/
+    url(r'^songs/(?P<filter_by>[a-zA_Z]+)/$', views.songs, name='songs'),
+
+    #/music/71/add/
+    url(r'^(?P<pk>[0-9]+)/add/$', views.SongCreate.as_view(), name='song-add'),
 ]
