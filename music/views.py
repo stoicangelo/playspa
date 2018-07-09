@@ -8,6 +8,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from .forms import UserForm
+from django.http import JsonResponse
 
 
 def index(request):
@@ -23,11 +24,20 @@ def index(request):
             return render(request, 'music/index.html', context) #we are using onject_list here coz for learning classbasedgen views we did the rest accordingly
 
 
+
 class DetailView(LoginRequiredMixin, generic.DetailView):
     login_url= 'music:login'
     redirect_field_name= 'go_to'
     model= Album
     template_name= 'music/detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        temp_album= Album.objects.get(pk=self.kwargs['pk'])
+        kwargs['song_list']= Song.objects.filter(album= temp_album)
+        #kwargs['song_list']= Album.objects.select_related().filter(pk= self.kwargs['pk'])
+        return super(DetailView, self).get_context_data(*args, **kwargs)
+
+
 
 
 class SongCreate(LoginRequiredMixin, CreateView):
@@ -47,6 +57,7 @@ class SongCreate(LoginRequiredMixin, CreateView):
         temp.album= Album.objects.get(pk= self.kwargs['pk'])
         temp.save()
         return super(SongCreate, self).form_valid(form)
+
 
 
 class AlbumCreate(LoginRequiredMixin, CreateView):
@@ -134,7 +145,8 @@ class LoginView(View):
             if user.is_active:
                 login(request, user)
                 return redirect('/music/')
-
+        else:
+            return render(request, 'music/login_form.html', {'error_message':'Not a valid username and pwd. Try Again or make sure that you are a registered user'}) 
         return render(request, 'music/login_form.html')
 
 
@@ -164,3 +176,17 @@ def songs(request, filter_by):
             'song_list': users_songs,
             'filter_by': filter_by,
 })
+
+def favorite_song(request,pk):
+
+    if not request.user.is_authenticated():
+        return render(request, 'music/login.html')
+    else:
+        song= Song.objects.get(pk=pk)
+        idee= song.album.pk
+        if song.is_favorite:
+            song.is_favorite= False
+        else:
+            song.is_favorite= True
+        song.save()
+        return redirect('music:songs','favorites')

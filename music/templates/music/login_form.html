@@ -9,7 +9,9 @@
           <div class="panel-body">
 
             <h3> Log In </h3>
-
+            {% if error_message %}
+              <p style="color:red;"><strong>{{ error_message }}</strong></p>
+            {% endif %}
             <form class="" method="post" role="form" action="{% url 'music:login' %}" enctype="multipart/form-data">
               {% csrf_token %}
 

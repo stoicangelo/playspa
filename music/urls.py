@@ -32,4 +32,10 @@ urlpatterns= [
 
     #/music/71/add/
     url(r'^(?P<pk>[0-9]+)/add/$', views.SongCreate.as_view(), name='song-add'),
+
+    #/music/song/22/favorite    or     #/music/song/22/favourite
+    url(r'^song/(?P<pk>[0-9]+)/favorite/$', views.favorite_song, name='fav_song'),
+    url(r'^song/(?P<pk>[0-9]+)/favourite/$', views.favorite_song, name='fav_song'),
+
+    
 ]

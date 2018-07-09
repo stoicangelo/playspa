@@ -1,21 +1,59 @@
-{% extends 'music/base.html' %}
+{% extends 'music/album_thumbnail.html' %}
 {% block title %}Details{% endblock %}
-{% block body %}
-  <h3>
-    Now showing all details of album with ID {{album.id}}
-  </h3>
+{% load staticfiles %}
 
-  <img src='{{album.album_logo.url}}' style="width:400px" alt="shit, cant load img">
+{% block right_to_thumbnail %}
+  <div class="col-sm-8 col-md-9">
 
-  <h3> {{album.artist}} </h3>
+    <ul class="nav nav-pills" >
+      <li role="presentation" class="active">
+        <a href="{% url 'music:detail' album.id %}">This Album</a>
+      </li>
+      <li role="presentation">
+        <a href="#">Add a Song</a>
+      </li>
+    </ul>
 
-    {% for song in album.song_set.all %}
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <th>song</th>
+            <th>song file</th>
+            <th>favorite</th>
+            <th>actions</th>
+          </thead>
+              
+          <tbody>
+            {% for song in song_list %}
+              <tr>  
+                <td> {{ song.song_title }}</td>
+                <td>
+                  <a target="_blank" href="{{ song.audio_file.url }}">
+                    <button type="button" class="btn btn-success btn-xs">
+                      <span class="glyphicon glyphicon-play"></span>&nbsp; Play
+                    </button>
+                  </a>
+                </td>
+                <td>
+                  <a href="{% url 'music:fav_song' song.id %}" class="btn-favorite">
+                    <span class="glyphicon glyphicon-star {% if song.is_active %} active {% endif %}"></span>
+                  </a>
+                </td>
+                <td>
+                  <a href="#">
+                    <button type="button" class="btn btn-danger btn-xs">
+                      <span class="glyphicon glyphicon-trash"></span>&nbsp; Remove
+                    </button>
+                  </a>
+                </td>
 
-        {{song.song_title}}
-        {% if song.is_favorite %}
-          <img src="http://i.imgur.com/b9b13Rd.png/" />
-        {% endif %}
-      <br>
-    {% endfor %}
+              </tr>
+            {% endfor %}       
+          </tbody>
 
+        </table>
+      </div>
+    </div>
+  </div>
 {% endblock %}
