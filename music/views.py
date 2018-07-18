@@ -9,6 +9,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import View
 from .forms import UserForm
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 def index(request):
@@ -17,10 +18,26 @@ def index(request):
         else:
             albums= Album.objects.filter(user=request.user)
             num= Album.objects.filter(user=request.user).count()
-            context={
-            'object_list': albums,
-            'num': num
-            }
+            req= request.GET.get("q")
+            if req:
+                songs=Song.objects.filter(album=albums)
+                albums= albums.filter(
+                    Q(album_title__icontains=req) |
+                    Q(artist__icontains=req)
+                ).distinct()
+                songs=songs.filter(
+                    Q(song_title__icontains=req)
+                ).distinct()
+                context={
+                'object_list': albums,
+                'num': num,
+                'songs': songs
+                }
+            else :
+                context={
+                'object_list': albums,
+                'num': num
+                }
             return render(request, 'music/index.html', context) #we are using onject_list here coz for learning classbasedgen views we did the rest accordingly
 
 

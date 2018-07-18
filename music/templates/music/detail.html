@@ -10,7 +10,7 @@
         <a href="{% url 'music:detail' album.id %}">This Album</a>
       </li>
       <li role="presentation">
-        <a href="#">Add a Song</a>
+        <a href="{% url 'music:song-add' album.id %}">Add a Song</a>
       </li>
     </ul>
 
