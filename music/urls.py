@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-import views
+from music import views
 app_name= 'music'  # required for namespace
 urlpatterns= [
     #/music/

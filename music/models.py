@@ -3,12 +3,13 @@ from __future__ import unicode_literals
 
 from django.contrib.auth.models import Permission, User
 from django.db import models
-from django.core.urlresolvers import reverse
+
+from django.urls import reverse
 
 
 # Create your models here.
 class Album(models.Model):
-    user= models.ForeignKey(User, default=1)
+    user= models.ForeignKey(User, default=1,on_delete=models.DO_NOTHING)
     artist= models.CharField(max_length=100)
     album_title= models.CharField(max_length=200)
     genre= models.CharField(max_length=50)
@@ -23,7 +24,7 @@ class Album(models.Model):
         return self.album_title+' by '+ self.artist
 
 class Song(models.Model):
-    album= models.ForeignKey(Album, on_delete=models.CASCADE)
+    album= models.ForeignKey('Album', on_delete=models.CASCADE)
     song_title= models.CharField(max_length=200)
     audio_file= models.FileField(default='')
     is_favorite= models.BooleanField(default=False)

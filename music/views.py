@@ -1,7 +1,7 @@
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Album, Song
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -13,7 +13,7 @@ from django.db.models import Q
 
 
 def index(request):
-        if not request.user.is_authenticated():
+        if not request.user.is_authenticated:
             return render(request, 'music/login_form.html')
         else:
             albums= Album.objects.filter(user=request.user)
@@ -169,14 +169,14 @@ class LoginView(View):
 
 def logout_user(request):
 
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return redirect('/music/login/')
     else :
         logout(request)
         return redirect('/music/login/')
 
 def songs(request, filter_by):
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return render(request, 'music/login.html')
     else:
         try:
@@ -196,7 +196,7 @@ def songs(request, filter_by):
 
 def favorite_song(request,pk):
 
-    if not request.user.is_authenticated():
+    if not request.user.is_authenticated:
         return render(request, 'music/login.html')
     else:
         song= Song.objects.get(pk=pk)
